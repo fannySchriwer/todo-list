@@ -24,7 +24,7 @@ function printTodoList() {
 	
     for(var i = 0; i < todoList.length; i++) {
 		
-        values += "<li class='col-12' id='todo'> <div class='row no-gutters'> <div class='col-6 border-right'>" + todoList[i] + '</div> <div class="col-6"><button class = "remove btn btn-secondary float-right" id = "' + i  + '"><i class="far fa-trash-alt"></i></button><button class = "delete btn btn-secondary float-right" id = "' + i  + '"><i class="fas fa-check"></i></button></div></div></li>';
+        values += "<li class='col-12' id='todo'> <div class='row no-gutters'> <div class='col-6'>" + todoList[i] + '</div> <div class="col-6"><button class = "remove btn btn-secondary float-right" id = "' + i  + '"><i class="far fa-trash-alt"></i></button><button class = "delete btn btn-secondary float-right" id = "' + i  + '"><i class="fas fa-check"></i></button></div></div></li>';
 		
 		
     };
@@ -146,12 +146,14 @@ function setItems() {
 	localStorage.setItem("todo", JSON.stringify(todoArray));
 }
 
-/*function sortList() {
+function sortList() {
 	var fromLocalStorage = localStorage.getItem("todo");
 	todoArray = JSON.parse(fromLocalStorage);
 
-	todoArray.sort();
+	todoArray.sort(function (a, b) {
+		return a.toLowerCase().localeCompare(b.toLowerCase());
+	});
 
 	setItems();
 	printTodoList();
-}*/
+}
