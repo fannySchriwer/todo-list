@@ -1,21 +1,20 @@
 var todoArray = ["Walk the dog", "Feed the dog", "Make coffee", "Take a shower", "Eat breakfast", "Go to school"];
 
+var doneArray = [];
 
 var fromLocalStorage = localStorage.getItem("todo");
 if(fromLocalStorage) {
 	todoArray = JSON.parse(fromLocalStorage);
 }
 
-var doneArray = [];
-
 var fromLocalStorage = localStorage.getItem("done");
 if(fromLocalStorage) {
 	doneArray = JSON.parse(fromLocalStorage);
 }
 
-setItems();
-
 function printTodoList() {
+	
+	setItems();
 	
     var todoTasks = localStorage.getItem("todo");
     todoList = JSON.parse(todoTasks);
@@ -24,14 +23,14 @@ function printTodoList() {
 	
     for(var i = 0; i < todoList.length; i++) {
 		
-        values += "<li class='col-12' id='todo'> <div class='row no-gutters'> <div class='col-6'>" + todoList[i] + '</div> <div class="col-6"><button class = "remove btn btn-secondary float-right" id = "' + i  + '"><i class="far fa-trash-alt"></i></button><button class = "delete btn btn-secondary float-right" id = "' + i  + '"><i class="fas fa-check"></i></button></div></div></li>';
+        values += "<li class='col-12' id='todo'> <div class='row no-gutters'> <div class='col-6'>" + todoList[i] + '</div> <div class="col-6"><button class = "remove btn btn-secondary float-right" id = "' + i  + '"><i class="far fa-trash-alt"></i></button><button class = "check btn btn-secondary float-right" id = "' + i  + '"><i class="fas fa-check"></i></button></div></div></li>';
 		
 		
     };
 	//print to inner html, todo from array and button with own id
     document.getElementById("todoList").innerHTML = values;
  
-    var deleteButton = document.getElementsByClassName("delete");
+    var deleteButton = document.getElementsByClassName("check");
 	var removeButton = document.getElementsByClassName("remove");
 	
 	//for each delete button, add event with deleteTodo function
@@ -59,14 +58,14 @@ function showDoneTodos() {
 	
     for(var i = 0; i < doneList.length; i++) {
 		
-        listItems += "<li class='col-12' id='done'> <div class='row no-gutters'> <div class='col-6'>" + doneList[i] + '</div> <div class="col-6"><button class = "remove btn btn-secondary float-right" id = "' + i  + '"><i class="far fa-trash-alt"></i></button><button class = "move btn btn-secondary float-right" id = "' + i  + '"><i class="fas fa-undo-alt"></i></button></div></div></li>';
+        listItems += "<li class='col-12' id='done'> <div class='row no-gutters'> <div class='col-6'>" + doneList[i] + '</div> <div class="col-6"><button class = "remove-done btn btn-secondary float-right" id = "' + i  + '"><i class="far fa-trash-alt"></i></button><button class = "move btn btn-secondary float-right" id = "' + i  + '"><i class="fas fa-undo-alt"></i></button></div></div></li>';
 		
     };
 	//print to inner html, todo from array and button with own id
     document.getElementById("doneTodos").innerHTML = listItems;
 	
 	var moveButton = document.getElementsByClassName("move");
-	var removeButton = document.getElementsByClassName("remove");
+	var removeButton = document.getElementsByClassName("remove-done");
 	
 	//for each delete button, add event with moveTodo function
     for (var i = 0; i < moveButton.length; i++) {
@@ -91,7 +90,6 @@ function addNewTodo() {
     todoArray.push(task);
  
 	//return functions to clear input field and print todo list
-	setItems();
 	clearInputField();
     printTodoList();
 
@@ -104,7 +102,6 @@ function checkTodo() {
 	doneArray.push(todoArray[id]);
     todoArray.splice(id, 1);
 
-	setItems();
     printTodoList();
 }
 
@@ -113,17 +110,15 @@ function moveTodo() {
     var i = this.getAttribute("id");
 	todoArray.push(doneArray[i]);
     doneArray.splice(i, 1);
-
-	setItems();
+	
     printTodoList();
 }
 
 function removeTodo() {
-	//move tasks by id back to todoarray
+	//remove from localstorage with id
     var i = this.getAttribute("id");
     todoArray.splice(i, 1);
 
-	setItems();
     printTodoList();
 }
 function removeDone() {
@@ -131,8 +126,18 @@ function removeDone() {
     var i = this.getAttribute("id");
     doneArray.splice(i, 1);
 
-	setItems();
     printTodoList();
+}
+
+function sortList() {
+	var fromLocalStorage = localStorage.getItem("todo");
+	todoArray = JSON.parse(fromLocalStorage);
+
+	todoArray.sort(function (a, b) {
+		return a.toLowerCase().localeCompare(b.toLowerCase());
+	});
+
+	printTodoList();
 }
 
 function clearInputField() {	
@@ -144,16 +149,4 @@ function clearInputField() {
 function setItems() {
 	localStorage.setItem("done", JSON.stringify(doneArray));
 	localStorage.setItem("todo", JSON.stringify(todoArray));
-}
-
-function sortList() {
-	var fromLocalStorage = localStorage.getItem("todo");
-	todoArray = JSON.parse(fromLocalStorage);
-
-	todoArray.sort(function (a, b) {
-		return a.toLowerCase().localeCompare(b.toLowerCase());
-	});
-
-	setItems();
-	printTodoList();
 }
